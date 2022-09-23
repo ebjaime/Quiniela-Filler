@@ -14,8 +14,8 @@ tf.config.run_functions_eagerly(True)
 
 
 class QuinielaFiller():
-    def __init__(self):
-        self.raw_data = prepare_hist_data()
+    def __init__(self, liga=1):
+        self.raw_data = prepare_hist_data(liga=liga)
         self.X, self.Y = self.preprocessing()
         self.model = self.create_model()
 
@@ -41,11 +41,11 @@ class QuinielaFiller():
     def evaluate(self, xt, yt):
         return self.model.evaluate(xt, yt, verbose=1)
 
-    def save(self, path="models/"):
-        self.model.save(path + "model")
+    def save(self, path="models/", name="model"):
+        self.model.save(path + name)
 
-    def load(self, path="models/model"):
-        self.model = keras.models.load_model(path)
+    def load(self, path="models/", name="model"):
+        self.model = keras.models.load_model(path + name)
 
     # TODO: Updates csv for the current season
     def update_data(self):

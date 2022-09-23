@@ -16,7 +16,7 @@ def scrap_live_odds():
         url_segunda = comps["Spain"]["La Liga 2"]
 
         odds_primera.append(api.odds(url_primera))
-        odds_segunda.append(api.odds(url_primera))
+        odds_segunda.append(api.odds(url_segunda))
 
     return odds_primera, odds_segunda
 
