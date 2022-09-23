@@ -22,7 +22,7 @@ class QuinielaFiller():
     # Trains model from historic_data inputted in initialization
     # + Predictions + Past odds
     def train(self, epochs=200, batch_size=5, verbose=1):
-        self.model.fit(self.X, self.Y, epochs=epochs, batch_size=batch_size, verbose=verbose)
+        return self.model.fit(self.X, self.Y, epochs=epochs, batch_size=batch_size, verbose=verbose)
 
     def predict(self, xt, batch_size=5, verbose=1):
         categorical = ["home_team", "away_team", "time"]
