@@ -7,7 +7,6 @@ hist_data_dir = "historic_data"
 preds_dir = "preds"
 
 
-# FIXME: include segunda teams
 def translate_to_abrev(name, opt=1):
     # FiveThirtyEight
     dict_1 = {
