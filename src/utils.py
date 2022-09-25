@@ -30,7 +30,7 @@ def translate_to_abrev(name, opt=1):
         'SD Ponferradina': "PON", 'Fuenlabrada': "FUE",
         'Castellon': "CAS", 'FC Cartagena': "CAR", 'Logrones': "LOG", 'CD Sabadell': "SAB",
         'Real Sociedad II': "RSB", 'UD Ibiza': "IBI", 'Amorebieta': "AMO", 'Burgos': "BUR",
-        'Villarreal B': "VIB", 'FC Andorra': "AND", "Tenerife":"TEN"
+        'Villarreal B': "VIB", 'FC Andorra': "AND", "Tenerife": "TEN"
 
     }
     # https://www.football-data.co.uk/
@@ -136,8 +136,9 @@ def get_avg_odds(fixt_odds):
 def correct_value_string(string):
     if isinstance(string, str):
         if string[-2:] == "Th":
-            return float(string[:-2])/1000
+            return float(string[:-2]) / 1000
     return float(string)
+
 
 # Creates a huge CSV with a row for each fixture between two teams [1],
 # information about the match (odds, predictions) [2],
@@ -224,7 +225,7 @@ def prepare_hist_data(liga=1):
 
     return df_aux
 
-
+# TODO: invert betting odds
 def prepare_live_data(liga=1):
     # [1] Get odds
     live_1, live_2 = scrap_live_odds()
@@ -262,7 +263,7 @@ def prepare_live_data(liga=1):
                           left_on=["time", "home_team", "away_team"],
                           right_on=["date", "team1", "team2"]).drop(columns=["date", "team1", "team2"])
     # [3] team info
-    if liga==1:
+    if liga == 1:
         tinfo = pd.read_csv("historic_data/team_info/202223_1.csv")
     else:
         tinfo = pd.read_csv("historic_data/team_info/202223_2.csv")
