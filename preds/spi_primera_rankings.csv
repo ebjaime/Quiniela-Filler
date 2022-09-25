@@ -1,21 +1,21 @@
 rank,prev_rank,name,league,off,def,spi
 5,5,Barcelona,Spanish Primera Division,2.68,0.43,88.66
 6,6,Real Madrid,Spanish Primera Division,2.73,0.55,87.07
-16,16,Villarreal,Spanish Primera Division,2.2,0.63,79.33
-17,13,Atletico Madrid,Spanish Primera Division,2.09,0.56,79.28
+16,15,Villarreal,Spanish Primera Division,2.2,0.63,79.33
+17,16,Atletico Madrid,Spanish Primera Division,2.09,0.56,79.28
 27,28,Athletic Bilbao,Spanish Primera Division,1.92,0.67,74.11
-29,27,Real Sociedad,Spanish Primera Division,1.88,0.67,73.49
-41,43,Valencia,Spanish Primera Division,1.83,0.74,70.99
-46,37,Real Betis,Spanish Primera Division,1.84,0.79,69.87
+29,30,Real Sociedad,Spanish Primera Division,1.88,0.67,73.49
+41,44,Valencia,Spanish Primera Division,1.83,0.74,70.99
+46,42,Real Betis,Spanish Primera Division,1.84,0.79,69.87
 51,48,Celta Vigo,Spanish Primera Division,1.76,0.77,68.89
 56,50,Osasuna,Spanish Primera Division,1.7,0.75,68.09
-57,60,Sevilla FC,Spanish Primera Division,1.76,0.8,68.0
+57,61,Sevilla FC,Spanish Primera Division,1.76,0.8,68.0
 81,84,Rayo Vallecano,Spanish Primera Division,1.68,0.93,63.13
-85,92,Getafe,Spanish Primera Division,1.52,0.83,62.27
+85,91,Getafe,Spanish Primera Division,1.52,0.83,62.27
 91,93,Girona FC,Spanish Primera Division,1.62,0.95,61.44
-92,91,Espanyol,Spanish Primera Division,1.68,1.01,61.21
-98,105,Mallorca,Spanish Primera Division,1.53,0.97,59.16
-104,107,Almeria,Spanish Primera Division,1.53,0.99,58.59
-110,112,Real Valladolid,Spanish Primera Division,1.56,1.07,57.23
-121,125,Cadiz,Spanish Primera Division,1.47,1.05,55.77
-153,141,Elche,Spanish Primera Division,1.47,1.16,52.79
+92,90,Espanyol,Spanish Primera Division,1.68,1.01,61.21
+98,103,Mallorca,Spanish Primera Division,1.53,0.97,59.16
+104,105,Almeria,Spanish Primera Division,1.53,0.99,58.59
+110,110,Real Valladolid,Spanish Primera Division,1.56,1.07,57.23
+121,124,Cadiz,Spanish Primera Division,1.47,1.05,55.77
+153,137,Elche,Spanish Primera Division,1.47,1.16,52.79
