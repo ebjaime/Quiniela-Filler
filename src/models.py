@@ -8,7 +8,7 @@ from sklearn.preprocessing import RobustScaler, LabelEncoder
 import keras
 import keras.models
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.utils import plot_model, to_categorical
 
 import tensorflow as tf
@@ -23,7 +23,6 @@ class QuinielaFillerBase():
 
         self.raw_data = prepare_hist_data(liga=liga)
         self.X, self.Y = self.preprocessing()
-        self.model = self.create_model()
 
     # Trains model from historic_data inputted in initialization
     # + Predictions + Past odds
@@ -114,13 +113,41 @@ class QuinielaFillerBase():
 
 
 class QuinielaFillerKeras(QuinielaFillerBase):
+    def __init__(self, liga=1, update_data=False,
+                 loss='categorical_crossentropy',
+                 optimizer="adam",
+                 metrics=['accuracy']):
+        super(QuinielaFillerKeras, self).__init__(liga=liga, update_data=update_data)
+        self.model = self.create_model(loss=loss, optimizer=optimizer, metrics=metrics)
+
+    def create_model(self,
+                     loss='categorical_crossentropy',
+                     optimizer='adam',
+                     metrics=['accuracy']):
+        # REVIEW: try other confg. options
+        model = Sequential()
+        model.add(Dense(8, activation='relu', input_shape=(self.X.shape[1],)))
+        model.add(Dropout(.1))
+        model.add(Dense(4, activation='relu'))
+        model.add(Dropout(.1))
+        model.add(Dense(3, activation='softmax'))
+
+        model.compile(loss=loss,
+                      optimizer=optimizer,
+                      metrics=metrics)
+
+        return model
 
     # Trains model from historic_data inputted in initialization
     # + Predictions + Past odds
-    def train(self, epochs=200, batch_size=5, verbose=1):
-        return self.model.fit(self.X, self.Y, epochs=epochs, batch_size=batch_size, verbose=verbose)
+    def train(self, epochs=200, batch_size=5, verbose=1, early_stopping=True, callbacks=[]):
+        if early_stopping:
+            callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3)
+            callbacks.append(callback)
+        return self.model.fit(self.X, self.Y, epochs=epochs, batch_size=batch_size, verbose=verbose,
+                              callbacks=callbacks)
 
-    def predict(self, xt, batch_size=5, verbose=1):
+    def predict(self, xt, batch_size=16, verbose=1):
         categorical = ["home_team", "away_team", "time"]
         unnecessary = ["total_valA", "total_valH"]
 
@@ -130,21 +157,10 @@ class QuinielaFillerKeras(QuinielaFillerBase):
         xt_scaled = self.rob_scaler.transform(df_num)
         return self.model.predict(xt_scaled, batch_size=batch_size, verbose=1)
 
-    def create_model(self,
-                     loss='categorical_crossentropy',
-                     optimizer='adam',
-                     metrics=['accuracy']):
-        # REVIEW: try other confg. options
-        model = Sequential()
-        model.add(Dense(8, activation='relu', input_shape=(self.X.shape[1],)))
-        model.add(Dense(8, activation='relu'))
-        model.add(Dense(3, activation='softmax'))
-
-        model.compile(loss=loss,
-                      optimizer=optimizer,
-                      metrics=metrics)
-
-        return model
+    def pretty_predict(self, xt, batch_size=5, verbose=1):
+        preds = self.predict(xt, batch_size, verbose)
+        preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
+        return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
 
     def visualize_model(self):
         self.model.summary()
@@ -159,14 +175,14 @@ class QuinielaFillerKeras(QuinielaFillerBase):
     def load(self, path="models/", name="model"):
         self.model = keras.models.load_model(path + name)
 
-    def pretty_predict(self, xt, batch_size=5, verbose=1):
-        preds = self.predict(xt, batch_size, verbose)
-        preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
-        return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
-
 
 # TODO: Random Forest
 class QuinielaFillerRF(QuinielaFillerBase):
+    pass
+
+
+# TODO: Hierarchical clustering
+class QuinielaFillerHC(QuinielaFillerBase):
     pass
 
 
