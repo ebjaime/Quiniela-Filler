@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime
-import numpy as np
 from src.scrap.scrap_live_odds import scrap_live_odds
 
 hist_data_dir = "historic_data"
