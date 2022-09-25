@@ -164,14 +164,17 @@ class QuinielaFillerKeras(QuinielaFillerBase):
         preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
         return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
 
-# TODO
+
+# TODO: Random Forest
 class QuinielaFillerRF(QuinielaFillerBase):
     pass
 
-# TODO:
+
+# TODO: SVM model
 class QuinielaFillerSVM(QuinielaFillerBase):
     pass
 
-# TODO:
+
+# TODO: LSTM model
 class QuinielaFillerLSTM(QuinielaFillerBase):
     pass

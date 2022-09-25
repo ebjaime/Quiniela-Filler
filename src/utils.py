@@ -225,7 +225,7 @@ def prepare_hist_data(liga=1):
 
     return df_aux
 
-# TODO: invert betting odds
+
 def prepare_live_data(liga=1):
     # [1] Get odds
     live_1, live_2 = scrap_live_odds()
@@ -239,6 +239,7 @@ def prepare_live_data(liga=1):
         live_info = l_aux[["time", "home_team", "away_team"]]
 
     aux = pd.concat(live_l, axis=1)
+    # Odds are inverted in the predict() function
     aux = aux.groupby(level=0, axis=1).mean() / 1000
 
     fixt = pd.concat([live_info, aux], axis=1)
