@@ -13,6 +13,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.utils import plot_model, to_categorical
 
+import tensorflow_decision_forests as tfdf
 import tensorflow as tf
 
 tf.config.run_functions_eagerly(True)
@@ -160,7 +161,6 @@ class QuinielaFillerBase:
         df_num[["AvgH", "AvgA", "AvgD"]] = 1 / df_num[["AvgH", "AvgA", "AvgD"]]
         df_Y = self.raw_data["FTR"]
 
-        # REVIEW: try other scaler for better results?
         self.rob_scaler = RobustScaler().fit(df_num)
         df_rob = self.rob_scaler.transform(df_num)
 
@@ -232,19 +232,86 @@ class QuinielaFillerKeras(QuinielaFillerBase):
 
 # TODO: Random Forest
 class QuinielaFillerRF(QuinielaFillerBase):
-    pass
+    def __init__(self, liga=1, update_data=False):
+        super(QuinielaFillerRF, self).__init__(liga=liga, update_data=update_data)
+        self.model = self.create_model()
+
+    # FIXME
+    def create_model(self, num_trials=20):
+        tuner = tfdf.tuner.RandomSearch(num_trials=num_trials)
+
+        # Hyper-parameters to optimize.
+        tuner.discret("max_depth", [4, 5, 6, 7])  # REVIEW: as input for function
+
+        model = tfdf.keras.RandomForestModel(tuner=tuner)
+        return model
+
+    def train(self, batch_size=16):
+        self.model.fit(self.X, self.Y, batch_size=batch_size)
+
+    def predict(self, xt, batch_size=16):
+        categorical = ["home_team", "away_team", "time"]
+        unnecessary = ["total_valA", "total_valH"]
+
+        df_num = xt.drop(columns=categorical + unnecessary)
+        df_num[["full_time_result.1", "full_time_result.2", "full_time_result.X"]] = 1 / df_num[
+            ["full_time_result.1", "full_time_result.2", "full_time_result.X"]]
+        xt_scaled = self.rob_scaler.transform(df_num)
+        return self.model.predict(xt_scaled, batch_size=batch_size, verbose=1)
+
+    def visualize_model(self):
+        print(self.model.summary())
+
+    def evaluate(self, xt, yt):
+        return self.model.evaluate(xt, yt, verbose=1)
+
+    def save(self, path="models/", name="model"):
+        self.model.save(path + name)
+
+    def load(self, path="models/", name="model"):
+        self.model = keras.models.load_model(path + name)
 
 
-# TODO: Hierarchical clustering
-class QuinielaFillerHC(QuinielaFillerBase):
-    pass
+# TODO: QDA
+class QuinielaFillerQDA(QuinielaFillerBase):
+    def __init__(self, liga=1, update_data=False):
+        super(QuinielaFillerQDA, self).__init__(liga=liga, update_data=update_data)
+
+    def create_model(self):
+        pass
+
+    def train(self):
+        pass
+
+    def predict(self, xt):
+        pass
 
 
 # TODO: SVM model
 class QuinielaFillerSVM(QuinielaFillerBase):
-    pass
+    def __init__(self, liga=1, update_data=False):
+        super(QuinielaFillerSVM, self).__init__(liga=liga, update_data=update_data)
+
+    def create_model(self):
+        pass
+
+    def train(self):
+        pass
+
+    def predict(self, xt):
+        pass
 
 
 # TODO: LSTM model
 class QuinielaFillerLSTM(QuinielaFillerBase):
-    pass
+    def __init__(self, liga=1, update_data=False):
+        super(QuinielaFillerLSTM, self).__init__(liga=liga, update_data=update_data)
+
+    def create_model(self):
+        pass
+
+    def train(self):
+        pass
+
+    def predict(self, xt):
+        pass
