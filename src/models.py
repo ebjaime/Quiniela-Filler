@@ -1,3 +1,5 @@
+import numpy as np
+
 from src.utils import *
 
 import requests
@@ -16,24 +18,87 @@ import tensorflow as tf
 tf.config.run_functions_eagerly(True)
 
 
-class QuinielaFillerBase():
+class Quiniela:
+    def __init__(self, model1=None, model2=None, dobles=2):
+        self.model1 = model1 if model1 is not None else QuinielaFillerKeras(liga=1, metrics=['accuracy'])
+        self.model2 = model2 if model2 is not None else QuinielaFillerKeras(liga=2, metrics=['accuracy'])
+        self.dobles = dobles
+
+        if self.model1 is None:
+            self.model1.train(batch_size=8)
+        if self.model2 is None:
+            self.model2.train(batch_size=8)
+
+    def predict_quiniela_pct(self, pleno_al_15=1, *args):
+        q1 = self.model1.predict_quiniela_pct(*args)
+        q2 = self.model2.predict_quiniela_pct(*args)
+        if pleno_al_15 == 1:
+            q = pd.concat([q1.iloc[:-1, :], q2], ignore_index=True)
+            q = q.append(q1.iloc[-1, :], ignore_index=True)
+        else:
+            q = pd.concat([q1, q2.iloc[:-1, :]], ignore_index=True)
+            q = q.append(q2.iloc[-1, :], ignore_index=True)
+        q.index = range(1, 16)
+        # Change column name from HDA to 1X2
+        q[["1", "X", "2"]] = q[["H", "D", "A"]]
+        q.drop(["H", "D", "A"], axis=1, inplace=True)
+        return q
+
+    def predict_quiniela(self, pleno_al_15=1, *args):
+        pct = self.predict_quiniela_pct(pleno_al_15=1, *args)
+        dobles = self.predict_dobles(pct)
+        # Choose best option for each fixture
+        pct["1X2"] = pct[["1", "X", "2"]].idxmax(axis=1)
+        # Drop unused columns
+        pct.drop(["1", "X", "2"], axis=1, inplace=True)
+        pct["Dobles"] = dobles
+        return pct
+
+    def predict_dobles(self, pct):
+        preds_pct = pct.copy()
+        col = preds_pct[["1", "X", "2"]].idxmax(axis=1)
+        for j in range(1, 16):
+            preds_pct.loc[j, col[j]] = 0
+        dobles = pd.Series(np.repeat("-", 15), index=range(1, 16))
+        for i in range(self.dobles):
+            max_col = preds_pct[["1", "X", "2"]].max().argmax()
+            max_row = preds_pct[["1", "X", "2"]].max(axis=1).argmax()
+            preds_pct.iloc[max_row, max_col + 3] = 0  # + 3 for columns Date, HT, AT
+            dobles[max_row + 1] = ["1", "X", "2"][max_col]
+        return dobles
+
+
+class QuinielaFillerBase:
     def __init__(self, liga=1, update_data=False):
         if update_data:
             self.update_csvs()
 
         self.raw_data = prepare_hist_data(liga=liga)
         self.X, self.Y = self.preprocessing()
+        self.liga = liga
 
-    # Trains model from historic_data inputted in initialization
-    # + Predictions + Past odds
+    def create_model(self):
+        pass
+
     def train(self):
         pass
 
     def predict(self, xt):
         pass
 
-    def create_model(self):
-        pass
+    def pretty_predict(self, xt, *args):
+        preds = self.predict(xt, *args)
+        preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
+        return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
+
+    def predict_quiniela_pct(self, pretty=True, *args):
+        live_data = prepare_live_data(liga=self.liga)
+        quiniela = prepare_quiniela()
+        quiniela_live = pd.merge(live_data, quiniela, how="inner")
+        if pretty:
+            return self.pretty_predict(quiniela_live, *args)
+        else:
+            return self.predict(quiniela_live, *args)
 
     def evaluate(self, xt, yt):
         pass
@@ -43,11 +108,6 @@ class QuinielaFillerBase():
 
     def load(self):
         pass
-
-    def pretty_predict(self, xt, batch_size=5, verbose=1):
-        preds = self.predict(xt, batch_size, verbose)
-        preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
-        return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
 
     # Updates all .csv files of the current season
     # due to changes in odds, dates...
@@ -124,7 +184,6 @@ class QuinielaFillerKeras(QuinielaFillerBase):
                      loss='categorical_crossentropy',
                      optimizer='adam',
                      metrics=['accuracy']):
-        # REVIEW: try other confg. options
         model = Sequential()
         model.add(Dense(8, activation='relu', input_shape=(self.X.shape[1],)))
         model.add(Dropout(.1))
@@ -156,11 +215,6 @@ class QuinielaFillerKeras(QuinielaFillerBase):
             ["full_time_result.1", "full_time_result.2", "full_time_result.X"]]
         xt_scaled = self.rob_scaler.transform(df_num)
         return self.model.predict(xt_scaled, batch_size=batch_size, verbose=1)
-
-    def pretty_predict(self, xt, batch_size=5, verbose=1):
-        preds = self.predict(xt, batch_size, verbose)
-        preds_df = pd.DataFrame(preds, columns=self.encoder.classes_)
-        return pd.concat([xt[["time", "home_team", "away_team"]], preds_df[["H", "D", "A"]]], axis=1)
 
     def visualize_model(self):
         self.model.summary()
