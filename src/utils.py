@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime
 from src.scrap.scrap_live_odds import scrap_live_odds
+from src.scrap.scrap_quiniela import scrap_todays_quiniela
 
 hist_data_dir = "historic_data"
 preds_dir = "preds"
@@ -100,7 +101,16 @@ def translate_to_abrev(name, opt=1):
         'Granada': "GRA", 'Alavés': "ALA"
 
     }
-    return dict_1[name] if opt == 1 else (dict_2[name] if opt == 2 else (dict_3[name] if opt == 3 else dict_4[name]))
+    # https://www.mundodeportivo.com/servicios/quiniela
+    dict_5 = {
+        'CÁDIZ': "CAD", 'GETAFE': "GET", 'SEVILLA': "SEV", 'MALLORCA': "MAL", 'ESPANYOL': "ESP", 'CELTA': "CEL",
+        'GIRONA': "GIR", 'R.MADRID': "RMA", 'RACING S.': "RCG", 'ALAVÉS': "ALA", 'LEGANÉS': "LEG", 'GRANADA': "GRA",
+        'R.OVIEDO': "OVI", 'IBIZA': "IBI", 'RAYO': "RVA",
+        'VILLARREAL': "VIL", 'VALLADOLID': "VAD", 'AT.MADRID': "ATM", 'BARCELONA': "BAR", 'VALENCIA': "VAL",
+        'BETIS': "BET", 'R.SOCIEDAD': "RSO", 'OSASUNA': "OSA", 'MÁLAGA': "MLG", 'PONFERRADINA': "PON",
+        'ALBACETE': "ALB", 'HUESCA': "HUE", 'CARTAGENA': "CAR", 'LUGO': "LUG", 'ELCHE': "ELC"
+    }
+    return dict_1[name] if opt == 1 else (dict_2[name] if opt == 2 else (dict_3[name] if opt == 3 else (dict_4[name] if opt==4 else dict_5[name])))
 
 
 def clean_end_ws(name):
@@ -288,6 +298,17 @@ def prepare_live_data(liga=1):
                       'num_squadA', 'mean_ageA', 'num_foreignA', 'mean_valA', 'total_valA']
 
     return df_aux
+
+
+def prepare_quiniela():
+    raw_q = scrap_todays_quiniela()
+    quiniela = []
+    for fixture in raw_q:
+        home, away = fixture.split(" - ")
+        quiniela.append([home, away])
+    quiniela = pd.DataFrame(quiniela, columns=["home_team", "away_team"])
+    quiniela[["home_team", "away_team"]] = quiniela[["home_team", "away_team"]].applymap(translate_to_abrev, opt=5)
+    return quiniela
 
 
 if __name__ == "__main__":
