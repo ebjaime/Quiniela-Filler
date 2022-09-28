@@ -6,6 +6,7 @@ import requests
 import os
 
 from sklearn.preprocessing import RobustScaler, LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
 
 import keras
 import keras.models
@@ -13,7 +14,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.utils import plot_model, to_categorical
 
-import tensorflow_decision_forests as tfdf
 import tensorflow as tf
 
 tf.config.run_functions_eagerly(True)
@@ -211,8 +211,9 @@ class QuinielaFillerKeras(QuinielaFillerBase):
         unnecessary = ["total_valA", "total_valH"]
 
         df_num = xt.drop(columns=categorical + unnecessary)
-        df_num[["full_time_result.1", "full_time_result.2", "full_time_result.X"]] = 1 / df_num[
+        df_num[["AvgH", "AvgA", "AvgD"]] = 1 / df_num[
             ["full_time_result.1", "full_time_result.2", "full_time_result.X"]]
+        df_num.drop(["full_time_result.1", "full_time_result.2", "full_time_result.X"], axis=1, inplace=True)
         xt_scaled = self.rob_scaler.transform(df_num)
         return self.model.predict(xt_scaled, batch_size=batch_size, verbose=1)
 
@@ -230,67 +231,49 @@ class QuinielaFillerKeras(QuinielaFillerBase):
         self.model = keras.models.load_model(path + name)
 
 
-# TODO: Random Forest
 class QuinielaFillerRF(QuinielaFillerBase):
-    def __init__(self, liga=1, update_data=False):
+    def __init__(self, liga=1, update_data=False, *args):
         super(QuinielaFillerRF, self).__init__(liga=liga, update_data=update_data)
-        self.model = self.create_model()
+        self.model = self.create_model(*args)
 
-    # FIXME
-    def create_model(self, num_trials=20):
-        tuner = tfdf.tuner.RandomSearch(num_trials=num_trials)
-
-        # Hyper-parameters to optimize.
-        tuner.discret("max_depth", [4, 5, 6, 7])  # REVIEW: as input for function
-
-        model = tfdf.keras.RandomForestModel(tuner=tuner)
+    def create_model(self, criterion='entropy', n_estimators=100, max_depth=16, warm_start=True, verbose=1):
+        model = RandomForestClassifier(criterion=criterion, n_estimators=n_estimators, max_depth=max_depth,
+                                       warm_start=warm_start,
+                                       verbose=verbose,
+                                       random_state=42)
         return model
 
-    def train(self, batch_size=16):
-        self.model.fit(self.X, self.Y, batch_size=batch_size)
+    def train(self):
+        self.Y = self.raw_data["FTR"]
+        self.model.fit(self.X, self.Y)
 
-    def predict(self, xt, batch_size=16):
+    def predict(self, xt):
         categorical = ["home_team", "away_team", "time"]
         unnecessary = ["total_valA", "total_valH"]
 
         df_num = xt.drop(columns=categorical + unnecessary)
-        df_num[["full_time_result.1", "full_time_result.2", "full_time_result.X"]] = 1 / df_num[
+        df_num[["AvgH", "AvgA", "AvgD"]] = 1 / df_num[
             ["full_time_result.1", "full_time_result.2", "full_time_result.X"]]
+        df_num.drop(["full_time_result.1", "full_time_result.2", "full_time_result.X"], axis=1, inplace=True)
         xt_scaled = self.rob_scaler.transform(df_num)
-        return self.model.predict(xt_scaled, batch_size=batch_size, verbose=1)
 
-    def visualize_model(self):
-        print(self.model.summary())
+        preds = self.model.predict_proba(xt_scaled)
+        return preds
 
     def evaluate(self, xt, yt):
         return self.model.evaluate(xt, yt, verbose=1)
 
     def save(self, path="models/", name="model"):
-        self.model.save(path + name)
+        pass
 
     def load(self, path="models/", name="model"):
-        self.model = keras.models.load_model(path + name)
+        pass
 
 
 # TODO: QDA
 class QuinielaFillerQDA(QuinielaFillerBase):
     def __init__(self, liga=1, update_data=False):
         super(QuinielaFillerQDA, self).__init__(liga=liga, update_data=update_data)
-
-    def create_model(self):
-        pass
-
-    def train(self):
-        pass
-
-    def predict(self, xt):
-        pass
-
-
-# TODO: SVM model
-class QuinielaFillerSVM(QuinielaFillerBase):
-    def __init__(self, liga=1, update_data=False):
-        super(QuinielaFillerSVM, self).__init__(liga=liga, update_data=update_data)
 
     def create_model(self):
         pass
@@ -315,3 +298,19 @@ class QuinielaFillerLSTM(QuinielaFillerBase):
 
     def predict(self, xt):
         pass
+
+# TODO: SVM model
+class QuinielaFillerSVM(QuinielaFillerBase):
+    def __init__(self, liga=1, update_data=False):
+        super(QuinielaFillerSVM, self).__init__(liga=liga, update_data=update_data)
+
+    def create_model(self):
+        pass
+
+    def train(self):
+        pass
+
+    def predict(self, xt):
+        pass
+
+
