@@ -7,6 +7,7 @@ import os
 
 from sklearn.preprocessing import RobustScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 import keras
 import keras.models
@@ -21,8 +22,10 @@ tf.config.run_functions_eagerly(True)
 
 class Quiniela:
     def __init__(self, model1=None, model2=None, dobles=2):
-        self.model1 = model1 if model1 is not None else QuinielaFillerKeras(liga=1, metrics=['accuracy'])
-        self.model2 = model2 if model2 is not None else QuinielaFillerKeras(liga=2, metrics=['accuracy'])
+        self.model1 = model1 if model1 is not None else QuinielaFillerKeras(liga=1, update_data=True,
+                                                                            metrics=['accuracy'])
+        self.model2 = model2 if model2 is not None else QuinielaFillerKeras(liga=2, update_data=True,
+                                                                            metrics=['accuracy'])
         self.dobles = dobles
 
         if self.model1 is None:
@@ -161,7 +164,8 @@ class QuinielaFillerBase:
         df_num[["AvgH", "AvgA", "AvgD"]] = 1 / df_num[["AvgH", "AvgA", "AvgD"]]
         df_Y = self.raw_data["FTR"]
 
-        self.rob_scaler = RobustScaler().fit(df_num)
+        self.rob_scaler = RobustScaler()
+        self.rob_scaler.fit(df_num)
         df_rob = self.rob_scaler.transform(df_num)
 
         self.encoder = LabelEncoder()
@@ -176,19 +180,23 @@ class QuinielaFillerKeras(QuinielaFillerBase):
     def __init__(self, liga=1, update_data=False,
                  loss='categorical_crossentropy',
                  optimizer="adam",
-                 metrics=['accuracy']):
+                 metrics=['accuracy'],
+                 dropout=True):
         super(QuinielaFillerKeras, self).__init__(liga=liga, update_data=update_data)
-        self.model = self.create_model(loss=loss, optimizer=optimizer, metrics=metrics)
+        self.model = self.create_model(loss=loss, optimizer=optimizer, metrics=metrics, dropout=dropout)
 
     def create_model(self,
                      loss='categorical_crossentropy',
                      optimizer='adam',
-                     metrics=['accuracy']):
+                     metrics=['accuracy'],
+                     dropout=True):
         model = Sequential()
-        model.add(Dense(8, activation='relu', input_shape=(self.X.shape[1],)))
-        model.add(Dropout(.1))
-        model.add(Dense(4, activation='relu'))
-        model.add(Dropout(.1))
+        model.add(Dense(16, activation='relu', input_shape=(self.X.shape[1],)))
+        if dropout:
+            model.add(Dropout(.1))
+        model.add(Dense(8, activation='relu'))
+        if dropout:
+            model.add(Dropout(.1))
         model.add(Dense(3, activation='softmax'))
 
         model.compile(loss=loss,
@@ -197,7 +205,7 @@ class QuinielaFillerKeras(QuinielaFillerBase):
 
         return model
 
-    # Trains model from historic_data inputted in initialization
+    # Trains model_nn from historic_data inputted in initialization
     # + Predictions + Past odds
     def train(self, epochs=200, batch_size=5, verbose=1, early_stopping=True, callbacks=[]):
         if early_stopping:
@@ -219,15 +227,15 @@ class QuinielaFillerKeras(QuinielaFillerBase):
 
     def visualize_model(self):
         self.model.summary()
-        plot_model(self.model, to_file='/tmp/model.png', show_shapes=True, )
+        plot_model(self.model, to_file='/tmp/model_nn.png', show_shapes=True, )
 
     def evaluate(self, xt, yt):
         return self.model.evaluate(xt, yt, verbose=1)
 
-    def save(self, path="models/", name="model"):
+    def save(self, path="models/", name="model_nn"):
         self.model.save(path + name)
 
-    def load(self, path="models/", name="model"):
+    def load(self, path="models/", name="model_nn"):
         self.model = keras.models.load_model(path + name)
 
 
@@ -263,11 +271,35 @@ class QuinielaFillerRF(QuinielaFillerBase):
     def evaluate(self, xt, yt):
         return self.model.evaluate(xt, yt, verbose=1)
 
-    def save(self, path="models/", name="model"):
-        pass
 
-    def load(self, path="models/", name="model"):
-        pass
+
+class QuinielaFillerKNN(QuinielaFillerBase):
+    def __init__(self, liga=1, update_data=False, n_neighbors=5):
+        super(QuinielaFillerKNN, self).__init__(liga=liga, update_data=update_data)
+        self.model = self.create_model(n_neighbors=n_neighbors)
+
+    def create_model(self, n_neighbors):
+        return KNeighborsClassifier(n_neighbors=n_neighbors)
+
+    def train(self):
+        self.Y = self.raw_data["FTR"]
+        self.model.fit(self.X, self.Y)
+
+    def predict(self, xt):
+        categorical = ["home_team", "away_team", "time"]
+        unnecessary = ["total_valA", "total_valH"]
+
+        df_num = xt.drop(columns=categorical + unnecessary)
+        df_num[["AvgH", "AvgA", "AvgD"]] = 1 / df_num[
+            ["full_time_result.1", "full_time_result.2", "full_time_result.X"]]
+        df_num.drop(["full_time_result.1", "full_time_result.2", "full_time_result.X"], axis=1, inplace=True)
+        xt_scaled = self.rob_scaler.transform(df_num)
+
+        preds = self.model.predict_proba(xt_scaled)
+        return preds
+
+    def evaluate(self, xt, yt):
+        return self.model.evaluate(xt, yt, verbose=1)
 
 
 # TODO: QDA
@@ -285,7 +317,7 @@ class QuinielaFillerQDA(QuinielaFillerBase):
         pass
 
 
-# TODO: LSTM model
+# TODO: LSTM
 class QuinielaFillerLSTM(QuinielaFillerBase):
     def __init__(self, liga=1, update_data=False):
         super(QuinielaFillerLSTM, self).__init__(liga=liga, update_data=update_data)
@@ -299,7 +331,8 @@ class QuinielaFillerLSTM(QuinielaFillerBase):
     def predict(self, xt):
         pass
 
-# TODO: SVM model
+
+# TODO: SVM
 class QuinielaFillerSVM(QuinielaFillerBase):
     def __init__(self, liga=1, update_data=False):
         super(QuinielaFillerSVM, self).__init__(liga=liga, update_data=update_data)
@@ -312,5 +345,3 @@ class QuinielaFillerSVM(QuinielaFillerBase):
 
     def predict(self, xt):
         pass
-
-
