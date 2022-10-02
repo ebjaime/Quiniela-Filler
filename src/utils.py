@@ -299,7 +299,7 @@ def prepare_live_data(liga=1):
 
     return df_aux
 
-
+# TODO: Check whether there are spanish teams
 def prepare_quiniela():
     raw_q = scrap_todays_quiniela()
     quiniela = []

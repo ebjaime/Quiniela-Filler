@@ -10,12 +10,16 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
 from sklearn.svm import SVC
+from sklearn.utils import shuffle
 
 import keras
 import keras.models
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM, SpatialDropout1D
 from keras.utils import plot_model, to_categorical
+
+from xgboost import XGBClassifier
+import xgboost
 
 import tensorflow as tf
 
@@ -72,6 +76,9 @@ class Quiniela:
             preds_pct.iloc[max_row, max_col + 3] = 0  # + 3 for columns Date, HT, AT
             dobles[max_row + 1] = ["1", "X", "2"][max_col]
         return dobles
+
+    def get_quiniela(self):
+        return scrap_todays_quiniela()
 
 
 class QuinielaFillerBase:
@@ -169,7 +176,7 @@ class QuinielaFillerBase:
         # TODO: [3] Current data TransferMrkt
 
     def preprocessing(self):
-        # TODO: Mix all samples between them
+        self.raw_data = self.raw_data.sample(frac=1)
         categorical = ["HomeTeam", "AwayTeam", "Date", "FTR", "season"]
         unnecessary = ["total_valA", "total_valH"]
 
@@ -351,3 +358,27 @@ class QuinielaFillerGBC(QuinielaFillerBase):
 
     def evaluate(self, xt, yt):
         return self.model.evaluate(xt, yt, verbose=1)
+
+
+class QuinielaFillerXGBoost(QuinielaFillerBase):
+    def __init__(self, liga=1, update_data=False, **kwargs):
+        super(QuinielaFillerXGBoost, self).__init__(liga=liga, update_data=update_data)
+        self.model = self.create_model(**kwargs)
+
+    def create_model(self, n_estimators=100):
+        model = XGBClassifier(n_estimators=n_estimators)
+        return model
+
+    def train(self):
+        # self.Y = self.raw_data["FTR"]
+        self.model.fit(self.X, self.Y)
+
+    def evaluate(self, xt, yt):
+        return self.model.evaluate(xt, yt)
+
+    def save(self, name="model_xgb"):
+        self.model.save_model("models/" + name + ".json")
+
+    def load(self, name="model_xgb"):
+        self.model = xgboost.XGBClassifier()
+        self.model.load_model("models/" + name + ".json")
