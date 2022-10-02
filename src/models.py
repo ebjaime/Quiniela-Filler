@@ -41,6 +41,8 @@ class Quiniela:
 
     def predict_quiniela(self, pleno_al_15=1, **kwargs):
         pct = self.predict_quiniela_pct(pleno_al_15=1, **kwargs)
+        if pct is None:
+            return None
         dobles = self.predict_dobles(pct)
         # Choose best option for each fixture
         pct["1X2"] = pct[["1", "X", "2"]].idxmax(axis=1)
@@ -52,6 +54,9 @@ class Quiniela:
     def predict_quiniela_pct(self, pleno_al_15=1, **kwargs):
         q1 = self.model1.predict_quiniela_pct(**kwargs)
         q2 = self.model2.predict_quiniela_pct(**kwargs)
+        if q1 is None or q2 is None:
+            print("ERROR: Detected teams from outside Spain in today's Quiniela.")
+            return None
         if pleno_al_15 == 1:
             q = pd.concat([q1.iloc[:-1, :], q2], ignore_index=True)
             q = q.append(q1.iloc[-1, :], ignore_index=True)
@@ -117,6 +122,8 @@ class QuinielaFillerBase:
     def predict_quiniela_pct(self, pretty=True, **kwargs):
         live_data = prepare_live_data(liga=self.liga)
         quiniela = prepare_quiniela()
+        if quiniela is None:
+            return None
         quiniela_live = pd.merge(live_data, quiniela, how="inner")
         if pretty:
             return self.pretty_predict(quiniela_live, **kwargs)

@@ -306,8 +306,12 @@ def prepare_quiniela():
     for fixture in raw_q:
         home, away = fixture.split(" - ")
         quiniela.append([home, away])
+
     quiniela = pd.DataFrame(quiniela, columns=["home_team", "away_team"])
-    quiniela[["home_team", "away_team"]] = quiniela[["home_team", "away_team"]].applymap(translate_to_abrev, opt=5)
+    try:
+        quiniela[["home_team", "away_team"]] = quiniela[["home_team", "away_team"]].applymap(translate_to_abrev, opt=5)
+    except KeyError:
+        quiniela = None
     return quiniela
 
 
