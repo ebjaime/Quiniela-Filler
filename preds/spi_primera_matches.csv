@@ -1,5 +1,4 @@
 season,date,league_id,league,team1,team2,spi1,spi2,prob1,prob2,probtie,proj_score1,proj_score2,importance1,importance2,score1,score2,xg1,xg2,nsxg1,nsxg2,adj_score1,adj_score2
-
 2016,2016-08-19,1869,Spanish Primera Division,Málaga,Osasuna,72.57,56.93,0.5475,0.1897,0.2628,1.56,0.7,22.1,31.4,1,1,0.92,0.81,1.4,0.69,1.05,1.05
 2016,2016-08-19,1869,Spanish Primera Division,Deportivo La Coruña,Eibar,66.52,62.29,0.5003,0.226,0.2738,1.47,0.79,37.4,38.1,2,1,1.7,0.33,0.48,0.81,2.1,1.05
 2016,2016-08-20,1869,Spanish Primera Division,Barcelona,Real Betis,96.35,69.95,0.9591,0.0071,0.0337,3.4,0.42,68.5,27.3,6,2,3.86,0.26,5.29,0.34,6.01,2.1
