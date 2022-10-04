@@ -259,9 +259,9 @@ def prepare_live_data(liga=1):
 
     # [2] Get preds
     if liga == 1:
-        preds = pd.read_csv("preds/spi_primera_matches.csv")
+        preds = pd.read_csv(preds_dir+"/spi_primera_matches.csv")
     else:
-        preds = pd.read_csv("preds/spi_segunda_matches.csv")
+        preds = pd.read_csv(preds_dir+"/spi_segunda_matches.csv")
     preds = preds[["date", "team1", "team2", "spi1", "spi2", "prob1", "prob2", "probtie"]]
 
     # Combine with fixture information
@@ -275,9 +275,9 @@ def prepare_live_data(liga=1):
                           right_on=["date", "team1", "team2"]).drop(columns=["date", "team1", "team2"])
     # [3] team info
     if liga == 1:
-        tinfo = pd.read_csv("historic_data/team_info/202223_1.csv")
+        tinfo = pd.read_csv(data_dir+"/team_info/202223_1.csv")
     else:
-        tinfo = pd.read_csv("historic_data/team_info/202223_2.csv")
+        tinfo = pd.read_csv(data_dir+"/team_info/202223_2.csv")
     tinfo[["name"]] = tinfo[["name"]].applymap(clean_end_ws)
     tinfo[["name"]] = tinfo[["name"]].applymap(translate_to_abrev, opt=3)
     tinfo[["mean_val(mill)"]] = tinfo[["mean_val(mill)"]].applymap(correct_value_string)
