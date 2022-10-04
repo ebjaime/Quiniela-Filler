@@ -1,3 +1,7 @@
+"""
+    Scrap Odds (for 888Sport and Unibet) for next fixtures using soccerapi library 
+    Bet365 doesn't seem to work
+"""
 import pandas as pd
 from soccerapi.api import Api888Sport
 from soccerapi.api import ApiUnibet
@@ -20,3 +24,5 @@ def scrap_live_odds():
 
     return odds_primera, odds_segunda
 
+if __name__=="__main__":
+    scrap_live_odds()

@@ -3,8 +3,8 @@ from datetime import datetime
 from src.scrap.scrap_live_odds import scrap_live_odds
 from src.scrap.scrap_quiniela import scrap_todays_quiniela
 
-hist_data_dir = "historic_data"
-preds_dir = "preds"
+data_dir = "data"
+preds_dir = "data/preds"
 
 
 def translate_to_abrev(name, opt=1):
@@ -162,9 +162,9 @@ def prepare_hist_data(liga=1):
     fixt_ls = []
     for year in years:
         if liga == 1:
-            fixt_df = pd.read_csv(hist_data_dir + "/fixtures_and_odds/" + year + "_1.csv")
+            fixt_df = pd.read_csv(data_dir + "/fixtures_and_odds/" + year + "_1.csv")
         else:
-            fixt_df = pd.read_csv(hist_data_dir + "/fixtures_and_odds/" + year + "_2.csv")
+            fixt_df = pd.read_csv(data_dir + "/fixtures_and_odds/" + year + "_2.csv")
         # Date starting on the 2018 campaign has a different format
         if year == "201617" or year == "201718":
             fixt_df[["Date"]] = fixt_df[["Date"]].applymap(d_m_y_to_d_m_Y)
@@ -209,9 +209,9 @@ def prepare_hist_data(liga=1):
     season = 2016 if liga == 1 else 2017
     for year in years:
         if liga == 1:
-            info_df = pd.read_csv(hist_data_dir + "/team_info/" + year + "_1.csv")
+            info_df = pd.read_csv(data_dir + "/team_info/" + year + "_1.csv")
         else:
-            info_df = pd.read_csv(hist_data_dir + "/team_info/" + year + "_2.csv")
+            info_df = pd.read_csv(data_dir + "/team_info/" + year + "_2.csv")
         info_df["season"] = season
         info_ls.append(info_df)
         season += 1
@@ -299,7 +299,6 @@ def prepare_live_data(liga=1):
 
     return df_aux
 
-# TODO: Check whether there are spanish teams
 def prepare_quiniela():
     raw_q = scrap_todays_quiniela()
     quiniela = []

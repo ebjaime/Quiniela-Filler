@@ -21,3 +21,6 @@ def scrap_todays_quiniela():
     pleno_15 = soup.find("section", id="quiniela", class_="content").find_all("div", class_="row-last1")
     quiniela.append(pleno_15[0].find("div", class_="bg-name").text + " - " + pleno_15[1].find("div", class_="bg-name").text)
     return quiniela
+
+if __name__=="__main__":
+    scrap_todays_quiniela()

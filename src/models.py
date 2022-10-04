@@ -149,38 +149,44 @@ class QuinielaFillerBase:
         r_1 = requests.get(url_1, allow_redirects=True)
         r_2 = requests.get(url_2, allow_redirects=True)
 
-        open('historic_data/fixtures_and_odds/202223_1.csv', 'wb').write(r_1.content)
-        open('historic_data/fixtures_and_odds/202223_2.csv', 'wb').write(r_2.content)
+        open('data/fixtures_and_odds/202223_1.csv', 'wb').write(r_1.content)
+        open('data/fixtures_and_odds/202223_2.csv', 'wb').write(r_2.content)
 
-        # [2] Update preds FIveThirtyEight
+        # [2] Update preds FiveThirtyEight
         url_preds_m = "https://projects.fivethirtyeight.com/soccer-api/club/spi_matches.csv"
         url_preds_c = "https://projects.fivethirtyeight.com/soccer-api/club/spi_global_rankings.csv"
 
         r_preds_m = requests.get(url_preds_m, allow_redirects=True)
         r_preds_c = requests.get(url_preds_c, allow_redirects=True)
 
-        open('preds/spi_matches.csv', 'wb').write(r_preds_m.content)
-        open('preds/spi_global_rankings.csv', 'wb').write(r_preds_c.content)
+        open('data/preds/spi_matches.csv', 'wb').write(r_preds_m.content)
+        open('data/preds/spi_global_rankings.csv', 'wb').write(r_preds_c.content)
 
         os.system(
-            "echo 'season,date,league_id,league,team1,team2,spi1,spi2,prob1,prob2,probtie,proj_score1,proj_score2,importance1,importance2,score1,score2,xg1,xg2,nsxg1,nsxg2,adj_score1,adj_score2\n' > preds/spi_primera_matches.csv")
+            "echo 'season,date,league_id,league,team1,team2,spi1,spi2,prob1,prob2,probtie,proj_score1,proj_score2,importance1,importance2,score1,score2,xg1,xg2,nsxg1,nsxg2,adj_score1,adj_score2\n' > data/preds/spi_primera_matches.csv")
         os.system(
-            "echo 'season,date,league_id,league,team1,team2,spi1,spi2,prob1,prob2,probtie,proj_score1,proj_score2,importance1,importance2,score1,score2,xg1,xg2,nsxg1,nsxg2,adj_score1,adj_score2\n' > preds/spi_segunda_matches.csv")
-        os.system("echo 'rank,prev_rank,name,league,off,def,spi' > preds/spi_primera_rankings.csv")
-        os.system("echo 'rank,prev_rank,name,league,off,def,spi' > preds/spi_segunda_rankings.csv")
+            "echo 'season,date,league_id,league,team1,team2,spi1,spi2,prob1,prob2,probtie,proj_score1,proj_score2,importance1,importance2,score1,score2,xg1,xg2,nsxg1,nsxg2,adj_score1,adj_score2\n' > data/preds/spi_segunda_matches.csv")
+        os.system("echo 'rank,prev_rank,name,league,off,def,spi' > data/preds/spi_primera_rankings.csv")
+        os.system("echo 'rank,prev_rank,name,league,off,def,spi' > data/preds/spi_segunda_rankings.csv")
 
         os.system(
-            "cat preds/spi_global_rankings.csv | grep \"Spanish Primera Division\" >> preds/spi_primera_rankings.csv")
+            "cat data/preds/spi_global_rankings.csv | grep \"Spanish Primera Division\" >> data/preds/spi_primera_rankings.csv")
         os.system(
-            "cat preds/spi_global_rankings.csv | grep \"Spanish Segunda Division\" >> preds/spi_segunda_rankings.csv")
+            "cat data/preds/spi_global_rankings.csv | grep \"Spanish Segunda Division\" >> data/preds/spi_segunda_rankings.csv")
 
-        os.system("cat preds/spi_matches.csv | grep \"Spanish Primera Division\" >> preds/spi_primera_matches.csv")
-        os.system("cat preds/spi_matches.csv | grep \"Spanish Segunda Division\" >> preds/spi_segunda_matches.csv")
+        os.system("cat data/preds/spi_matches.csv | grep \"Spanish Primera Division\" >> data/preds/spi_primera_matches.csv")
+        os.system("cat data/preds/spi_matches.csv | grep \"Spanish Segunda Division\" >> data/preds/spi_segunda_matches.csv")
 
-        os.system("rm -r preds/spi_global_rankings.csv")
-        os.system("rm -r preds/spi_matches.csv")
+        os.system("rm -r data/preds/spi_global_rankings.csv")
+        os.system("rm -r data/preds/spi_matches.csv")
 
-        # TODO: [3] Current data TransferMrkt
+        # [3] Current data TransferMrkt
+        scrap_info_league()
+        scrap_total_table_transfermrkt()
+        scrap_home_table_transfermrkt()
+        scrap_away_transfermrkt()
+        scrap_last5_transfrmrkt()
+
 
     def preprocessing(self):
         self.raw_data = self.raw_data.sample(frac=1)
