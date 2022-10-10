@@ -14,21 +14,21 @@ Data sources for this project includes:
 
 ## Example
 ```
-  from src.models import QuinielaFillerGBC, QuinielaFillerXGBoost
+from src.models import QuinielaFillerGBC, QuinielaFillerXGBoost
 
 
-  qf1 = QuinielaFillerXGBoost(liga=1, n_estimators=200, update_data=True)
+qf1 = QuinielaFillerXGBoost(liga=1, n_estimators=200, update_data=True)
 
-  qf2 = QuinielaFillerGBC(liga=2, n_estimators=200)
+qf2 = QuinielaFillerGBC(liga=2, n_estimators=200)
 
-  qf1.train()
-  qf2.train()
-  qf1.save()
-  # qf1.load("loquesea")
+qf1.train()
+qf2.train()
+qf1.save()
+# qf1.load("loquesea")
 
-  qf = Quiniela(qf1, qf2)
-  preds = qf.predict_quiniela()
-  print(preds)
+qf = Quiniela(qf1, qf2)
+preds = qf.predict_quiniela()
+print(preds)
 ```
 From where we expect an output similar to:
 ```
