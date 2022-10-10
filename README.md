@@ -12,6 +12,13 @@ Data sources for this project includes:
 * [Transfermarkt data](https://www.transfermarkt.com/primera-division/startseite/wettbewerb/ES1)
 * [soccerapi](https://github.com/S1M0N38/soccerapi)
 
+Models available:
+* SVM model
+* Random Forest model
+* XGBoost model
+* Gradient Boosting model
+* Neural Network model (default configuration shows acceptable results)
+
 ## Example
 ```
 from src.models import QuinielaFillerGBC, QuinielaFillerXGBoost
