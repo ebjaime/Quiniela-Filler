@@ -4,7 +4,7 @@
 
 La Quiniela is the name of a Spanish game of chance, managed by Loterías y Apuestas del Estado, which is based on the First and Second Divisions of football. 
 
-This program uses information from different sources (betting odds, market value, past results...) to obtain possible outcomes for next week fixtures.
+This program uses information from different sources (betting odds, market value, past results...) to obtain possible outcomes for the current week's fixtures.
 
 Data sources for this project includes:
 * [FiveThirtyEight soccer predictions](https://data.fivethirtyeight.com/#soccer-spi)
