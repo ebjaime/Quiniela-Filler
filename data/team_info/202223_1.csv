@@ -1,13 +1,13 @@
 name,num_squad,mean_age,num_foreign,mean_val(mill),total_val(mill)
 FC Barcelona,25,25.4,10,32.55,813.70
 Real Sociedad,27,24.8,5,13.75,371.30
-Sevilla FC,25,28.4,18,11.06,276.50
-Valencia CF,25,24.3,14,9.49,237.20
+Sevilla FC,25,28.5,18,11.06,276.50
+Valencia CF,25,24.4,14,9.49,237.20
 Getafe CF,24,27.2,12,6.01,144.30
 CA Osasuna,24,27.6,5,5.17,124.00
 Girona FC ,26,25.8,9,3.52,91.60
 Rayo Vallecano,27,28.0,10,3.06,82.50
-RCD Mallorca,26,27.3,15,2.75,71.60
+RCD Mallorca,26,27.4,15,2.75,71.60
 Real Valladolid CF ,24,27.9,9,2.71,65.00
 Real Madrid,23,27.4,16,36.41,837.50
 Atlético de Madrid,22,27.8,16,27.80,611.50
@@ -15,7 +15,7 @@ Villarreal CF,25,27.8,11,14.41,360.20
 Real Betis Balompié,26,28.8,12,10.00,260.00
 Athletic Bilbao,26,27.2,1,9.12,237.00
 Celta de Vigo,22,26.0,9,5.85,128.70
-RCD Espanyol Barcelona,21,26.4,5,4.39,92.20
+RCD Espanyol Barcelona,21,26.5,5,4.39,92.20
 UD Almería ,28,25.3,13,3.11,87.00
 Elche CF,25,28.0,9,2.89,72.20
-Cádiz CF,27,28.5,9,2.41,65.00
+Cádiz CF,27,28.6,9,2.41,65.00
