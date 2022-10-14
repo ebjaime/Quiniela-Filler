@@ -1,21 +1,21 @@
 club,Matches_Played,W,D,L,Goals,+/-,Pts,last5
-Barcelona,6,6,0,0,16:0,16,18,WWWWWW
-Real Madrid ,6,5,1,0,13:5,8,16,WWWWDW
-Athletic,6,4,1,1,16:5,11,13,WLWWWD
-Atlético Madrid,6,4,1,1,11:5,6,13,WDWLWW
-Real Sociedad,6,4,1,1,11:7,4,13,WDLWWW
-Valencia,6,3,1,2,13:7,6,10,LWLWDW
-Real Betis ,6,3,1,2,5:4,1,10,WLWWLD
-Celta de Vigo,6,3,0,3,6:8,-2,9,WWLLWL
-RCD Mallorca,5,2,1,2,5:6,-1,7,WDLWL
-CA Osasuna,6,2,1,3,5:7,-2,7,LWWLDL
-Getafe,6,2,1,3,7:10,-3,7,DLWWLL
-Real Valladolid  ,6,2,1,3,5:9,-4,7,LWLLWD
-Villarreal,6,1,3,2,5:3,2,6,DWLDDL
-Rayo Vallecano,6,2,0,4,8:12,-4,6,LLWLWL
-UD Almería  ,6,2,0,4,5:9,-4,6,WLLLLW
-Espanyol,6,1,2,3,9:12,-3,5,LWLLDD
-Sevilla FC,6,1,2,3,6:11,-5,5,LLWDLD
-Cádiz CF,6,1,2,3,3:13,-10,5,LLLWDD
-Girona  ,6,1,1,4,8:12,-4,4,LDWLLL
-Elche CF,5,0,0,5,2:14,-12,0,LLLLL
+Barcelona,5,5,0,0,12:0,12,15,WWWWW
+Real Madrid ,5,4,1,0,10:4,6,13,WWWDW
+Valencia,5,3,1,1,13:6,7,10,WLWDW
+Athletic,5,3,1,1,12:5,7,10,LWWWD
+Atlético Madrid,5,3,1,1,10:5,5,10,DWLWW
+Real Sociedad,5,3,1,1,10:7,3,10,DLWWW
+Real Valladolid  ,5,2,1,2,5:5,0,7,WLLWD
+Real Betis ,5,2,1,2,4:4,0,7,LWWLD
+CA Osasuna,5,2,1,2,5:6,-1,7,WWLDL
+Rayo Vallecano,5,2,0,3,8:10,-2,6,LWLWL
+Getafe,5,2,0,3,7:10,-3,6,LWWLL
+Celta de Vigo,5,2,0,3,5:8,-3,6,WLLWL
+Villarreal,5,1,2,2,5:3,2,5,WLDDL
+Espanyol,5,1,2,2,8:9,-1,5,WLLDD
+RCD Mallorca,5,1,2,2,4:7,-3,5,DLWLD
+Sevilla FC,5,1,2,2,5:9,-4,5,LWDLD
+Cádiz CF,5,1,2,2,3:9,-6,5,LLWDD
+Girona  ,5,1,1,3,8:11,-3,4,DWLLL
+UD Almería  ,5,1,0,4,3:8,-5,3,LLLLW
+Elche CF,5,0,1,4,3:14,-11,1,LLLLD

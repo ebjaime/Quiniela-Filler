@@ -111,7 +111,8 @@ def translate_to_abrev(name, opt=1):
         'VILLARREAL': "VIL", 'VALLADOLID': "VAD", 'AT.MADRID': "ATM", 'BARCELONA': "BAR", 'VALENCIA': "VAL",
         'BETIS': "BET", 'R.SOCIEDAD': "RSO", 'OSASUNA': "OSA", 'MÁLAGA': "MLG", 'PONFERRADINA': "PON",
         'ALBACETE': "ALB", 'HUESCA': "HUE", 'CARTAGENA': "CAR", 'LUGO': "LUG", 'ELCHE': "ELC", 
-        "LEVANTE": "LEV", "R.ZARAGOZA":"ZAR", "TENERIFE":"TEN", "ALMERÍA": "ALM", "LAS PALMAS":"LPA", "ATH.CLUB":"ATH"
+        "LEVANTE": "LEV", "R.ZARAGOZA":"ZAR", "TENERIFE":"TEN", "ALMERÍA": "ALM", "LAS PALMAS":"LPA", "ATH.CLUB":"ATH",
+        "ANDORRA FC":"AND"
     }
     return dict_1[name] if opt == 1 else (dict_2[name] if opt == 2 else (dict_3[name] if opt == 3 else (dict_4[name] if opt==4 else dict_5[name])))
 

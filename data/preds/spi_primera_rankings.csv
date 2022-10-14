@@ -1,21 +1,21 @@
 rank,prev_rank,name,league,off,def,spi
-4,6,Real Madrid,Spanish Primera Division,2.74,0.52,87.62
-6,5,Barcelona,Spanish Primera Division,2.54,0.43,87.31
-13,11,Atletico Madrid,Spanish Primera Division,2.1,0.56,79.61
-19,14,Villarreal,Spanish Primera Division,2.11,0.61,78.57
-24,25,Athletic Bilbao,Spanish Primera Division,1.96,0.65,75.36
-27,30,Real Sociedad,Spanish Primera Division,1.93,0.65,74.87
+5,6,Real Madrid,Spanish Primera Division,2.72,0.52,87.48
+6,5,Barcelona,Spanish Primera Division,2.6,0.47,87.14
+13,13,Atletico Madrid,Spanish Primera Division,2.08,0.54,79.71
+18,14,Villarreal,Spanish Primera Division,2.06,0.58,78.6
+24,30,Real Sociedad,Spanish Primera Division,1.95,0.64,75.45
+25,24,Athletic Bilbao,Spanish Primera Division,1.96,0.65,75.36
 38,41,Valencia,Spanish Primera Division,1.88,0.74,71.85
 43,54,Celta Vigo,Spanish Primera Division,1.76,0.71,70.43
-44,47,Real Betis,Spanish Primera Division,1.77,0.71,70.41
-58,57,Osasuna,Spanish Primera Division,1.71,0.78,67.5
-67,64,Sevilla FC,Spanish Primera Division,1.74,0.88,65.78
-85,83,Rayo Vallecano,Spanish Primera Division,1.67,0.95,62.59
+45,45,Real Betis,Spanish Primera Division,1.75,0.7,70.34
+59,57,Osasuna,Spanish Primera Division,1.71,0.78,67.5
+61,65,Sevilla FC,Spanish Primera Division,1.75,0.84,66.87
+85,82,Rayo Vallecano,Spanish Primera Division,1.67,0.95,62.59
 90,89,Getafe,Spanish Primera Division,1.51,0.85,61.58
-91,93,Girona FC,Spanish Primera Division,1.67,1.01,61.08
-92,91,Espanyol,Spanish Primera Division,1.69,1.03,61.03
-94,95,Mallorca,Spanish Primera Division,1.53,0.92,60.32
-105,106,Almeria,Spanish Primera Division,1.53,1.02,57.72
-106,107,Real Valladolid,Spanish Primera Division,1.57,1.06,57.67
-115,115,Cadiz,Spanish Primera Division,1.46,1.03,56.04
-146,153,Elche,Spanish Primera Division,1.46,1.16,52.84
+91,94,Mallorca,Spanish Primera Division,1.55,0.89,61.53
+92,92,Girona FC,Spanish Primera Division,1.67,1.01,61.08
+93,91,Espanyol,Spanish Primera Division,1.69,1.03,61.03
+104,106,Almeria,Spanish Primera Division,1.53,1.02,57.72
+105,107,Real Valladolid,Spanish Primera Division,1.57,1.06,57.67
+116,111,Cadiz,Spanish Primera Division,1.46,1.03,56.04
+164,149,Elche,Spanish Primera Division,1.44,1.18,51.7
