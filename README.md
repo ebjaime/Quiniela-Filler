@@ -55,6 +55,9 @@ From where we expect an output similar to:
 14  09/10/2022       ALB       TEN   1      -
 15  10/10/2022       ELC       MAL   2      -
 ```
+Similarly to a real Quiniela:
+
+![](https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fwww.valverdeloteria.com%2Fblog%2Fwp-content%2Fuploads%2F2021%2F05%2Fquiniela-3-dobles-crop-blog.png&sp=1670877930T71a1a1baddbbf6aa2678cd784f0cf6ecbdd348400093738272eb48de3483ed4f)
 
 ## Telegram Bot
 A telegram bot has been deployed for public use: [Telegram bot](https://t.me/quiniela_filler_bot?)
